@@ -121,7 +121,8 @@ body {
   line-height: 1;
 }
 
-/* Le sélecteur : une capsule blanche posée sur la craie (comme les cartes de l'app), trois choix, le choisi en encre. */
+/* Le sélecteur : une capsule blanche posée sur la craie (comme les cartes de l'app), trois icônes (auto, soleil, lune),
+   la choisie en encre. */
 .theme {
   display: flex;
   flex: none;
@@ -132,18 +133,23 @@ body {
 }
 
 .theme button {
-  min-height: 32px;
-  padding: 0 12px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 32px;
+  padding: 0;
   border: 0;
   border-radius: 999px;
   background: transparent;
-  font: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
   color: var(--gris);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+}
+
+.theme svg {
+  width: 20px;
+  height: 20px;
+  display: block;
 }
 
 .theme button[aria-pressed="true"] {

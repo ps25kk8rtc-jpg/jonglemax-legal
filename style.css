@@ -1,67 +1,38 @@
-/* JongleMax legal pages (style repris de Jawlyn, couleurs neutres en attendant la DA). Light only since 29/09/2026: they take the look of
-   jawlyn.app (its footer links here), a warm white page with ink text, so a
-   tap on "Privacy" lands on the same world, never on a dark one. The old
-   prefers-color-scheme dark block is gone on purpose: an iPhone in dark mode
-   used to open these pages on the night background.
-
-   Still plain and fast: no script, one stylesheet, Inter self-hosted here
-   (fonts/, OFL), so no request leaves for a font service. The text lives
-   in the HTML and this file never adds any: every decoration below is an
-   empty pseudo-element.
-
-   Contrast, measured (WCAG 2) on white / on the blush #FBF3F6 / on the
-   pinkest pixel rendered, the foot of the glass card (#FAEEF1): ink 18.9 /
-   17.3 / 16.7; the grey 7.7 / 7.0 / 6.8; the link pink 5.5 / 5.0 / 4.8. The
-   pale pink #F2A6BB (1.9:1) is never text: only the bullets and the small
-   bar over each heading. */
+/* JongleMax, pages légales : le design system de l'app, « Le bleu du coach » (docs/DESIGN-SYSTEM.md), 22/10/2026.
+   Du papier craie, de l'encre, un seul bleu. La page suit le mode clair / sombre de l'iPhone, comme l'app : craie et
+   encre le jour, nuit bleutée et craie la nuit. La police est celle de l'app, SF Pro Rounded (`ui-rounded`, la police du
+   système sur iPhone et Mac : rien à télécharger) ; ailleurs, la police du système.
+   Toujours plain et rapide : aucun script, aucun cookie, une feuille de style, une image (le logo). */
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
 
-  --bg-0: #ffffff;
-  --bg-1: #f4f6f2;
-  --ink: #131017;
-  --ink-2: #57515c;
-  --rose: #b8d94a;
-  /* The landing's deep pink #B0506F measured 4.4:1 on the card's foot: one
-     step deeper here, so a link passes 4.5 wherever it lands. */
-  --rose-ink: #3f6212;
-  --rose-tint: rgba(184, 217, 74, 0.32);
-  --hairline: rgba(19, 16, 23, 0.08);
+  --craie: #F6F5F1;
+  --surface: #FFFFFF;
+  --encre: #0E1525;
+  --gris: #5A6272;
+  --bleu: #1F4FE0;
+  --bleu-lave: #E6ECFD;
+  --separateur: #E7E5DF;
+  --selection: rgba(31, 79, 224, 0.18);
+  /* L'ombre douce des cartes de l'app (Shadow.carte, 3 couches), mode clair seulement. */
+  --ombre-carte: 0 1px 2px rgba(14, 21, 37, 0.04), 0 4px 12px rgba(14, 21, 37, 0.06), 0 12px 32px -8px rgba(14, 21, 37, 0.10);
 
-  /* The landing's glass card (slGlass): white to pink white, a sheen on the
-     top half, a 1 px rim white at the top and pink at the foot. */
-  --glass: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(252, 247, 249, 0.74));
-  --glass-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 55%);
-  --glass-rim: linear-gradient(180deg, #fff 0%, rgba(242, 166, 187, 0.35) 50%, rgba(242, 166, 187, 0.5) 100%);
-  --glass-shadow: 0 10px 28px -12px rgba(70, 30, 50, 0.22), 0 2px 6px -2px rgba(70, 30, 50, 0.08);
-
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font: ui-rounded, -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Text", system-ui, "Segoe UI", Roboto, sans-serif;
   --gutter: 20px;
 }
 
-/* Inter variable (weight + optical size), cut to the glyphs of these pages:
-   ASCII, nbsp, the middle dot, the arrow of "Settings → Clear My Data"
-   and "Settings → Manage My Subscription". Cut from Inter 4.1 (rsms/inter,
-   InterVariable*.ttf), not from the landing's file: the Google latin
-   subset that one comes from has no arrow, so the system font drew it.
-   The other 100 glyphs keep the same outlines and metrics:
-     python3 -m fontTools.subset InterVariable.ttf --flavor=woff2 \
-       --unicodes="U+0020-007E,U+00A0,U+00A9,U+00B7,U+200B,U+2019,U+2192" \
-       --layout-features=kern,liga --output-file=fonts/inter-opsz.woff2
-   (the same for InterVariable-Italic.ttf -> inter-opsz-italic.woff2). */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('fonts/inter-opsz.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Inter';
-  font-style: italic;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('fonts/inter-opsz-italic.woff2') format('woff2');
+@media (prefers-color-scheme: dark) {
+  :root {
+    --craie: #0B0F17;
+    --surface: #151B26;
+    --encre: #EEF1F6;
+    --gris: #A3ABBA;
+    --bleu: #6E9BFF;
+    --bleu-lave: #1B2540;
+    --separateur: #222A38;
+    --selection: rgba(110, 155, 255, 0.28);
+    --ombre-carte: none;
+  }
 }
 
 *,
@@ -71,93 +42,117 @@
 }
 
 html {
-  background-color: var(--bg-0);
+  background-color: var(--craie);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
 body {
   margin: 0 auto;
-  padding: 44px var(--gutter) calc(32px + env(safe-area-inset-bottom));
+  padding: 24px var(--gutter) calc(32px + env(safe-area-inset-bottom));
   max-width: calc(640px + 2 * var(--gutter));
   font-family: var(--font);
   font-size: 17px;
   font-weight: 400;
   line-height: 1.6;
-  font-optical-sizing: auto;
-  color: var(--ink-2);
-  background: transparent;
+  color: var(--gris);
+  background: var(--craie);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-wrap: break-word;
 }
 
-/* The page's white, fading to the blush at the foot of the screen, fixed
-   (background-attachment: fixed is ignored by iOS Safari, a fixed layer is
-   not). */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-color: var(--bg-0);
-  background-image: linear-gradient(180deg, var(--bg-0) 0%, var(--bg-0) 35%, var(--bg-1) 100%);
-  pointer-events: none;
-}
-
 ::selection {
-  background: var(--rose-tint);
-  color: var(--ink);
+  background: var(--selection);
+  color: var(--encre);
 }
 
-/* ---- type ---------------------------------------------------------------- */
+/* ---- la marque : le logo cuir et le nom, comme dans l'app (components/Marque.tsx) ------------------------------ */
+
+.marque {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 36px;
+  color: var(--encre);
+  text-decoration: none;
+}
+
+.marque img {
+  width: 36px;
+  height: 36px;
+  display: block;
+}
+
+.marque span {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* Sur la page d'accueil, la marque est le titre. */
+.marque.grande {
+  gap: 16px;
+  margin: 24px 0 8px;
+}
+
+.marque.grande img {
+  width: 72px;
+  height: 72px;
+}
+
+.marque.grande span {
+  font-size: clamp(34px, 9.4vw, 40px);
+  letter-spacing: -0.03em;
+}
+
+/* ---- type -------------------------------------------------------------------------------------------------- */
 
 h1 {
   margin: 0;
   font-size: clamp(34px, 9.4vw, 40px);
-  font-weight: 650;
-  font-variation-settings: 'opsz' 32;
+  font-weight: 800;
   line-height: 1.06;
   letter-spacing: -0.03em;
-  color: var(--ink);
+  color: var(--encre);
   text-wrap: balance;
 }
 
-/* Under the title: the app, the date, the one-line change note. */
+/* Sous le titre : l'app, la date. */
 .updated {
-  margin: 12px 0 28px;
+  margin: 12px 0 24px;
   font-size: 15px;
   line-height: 1.5;
-  color: var(--ink-2);
+  color: var(--gris);
 }
 
-/* The opening paragraph of each page, in the landing's glass card. */
-.updated + p {
+/* Le premier paragraphe de chaque page, dans une carte blanche posée sur la craie (sans bordure, ombre douce). */
+.carte {
   margin: 0 0 8px;
   padding: 18px 20px;
-  border: 1px solid transparent;
-  border-radius: 20px;
-  background:
-    var(--glass-sheen) padding-box,
-    var(--glass) padding-box,
-    var(--glass-rim) border-box;
-  box-shadow: var(--glass-shadow);
-  color: var(--ink-2);
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: var(--ombre-carte);
+  color: var(--gris);
+}
+
+.carte strong {
+  color: var(--encre);
 }
 
 h2 {
   margin: 44px 0 10px;
   font-size: 21px;
-  font-weight: 650;
+  font-weight: 800;
   line-height: 1.25;
   letter-spacing: -0.02em;
-  color: var(--ink);
+  color: var(--encre);
   text-wrap: balance;
   scroll-margin-top: 24px;
 }
 
-/* The landing's pink pill, small, over each heading: it marks where a
-   section starts on a long page. */
+/* Le petit trait bleu club au-dessus de chaque section : la barre de niveau de l'app, en miniature. */
 h2::before {
   content: '';
   display: block;
@@ -165,22 +160,28 @@ h2::before {
   height: 4px;
   margin-bottom: 12px;
   border-radius: 2px;
-  background: var(--rose);
+  background: var(--bleu);
+}
+
+h3 {
+  margin: 28px 0 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--encre);
 }
 
 p {
   margin: 0 0 14px;
 }
 
-/* No lone word on the last line ("it.", "28, 2026."), where supported. */
 p,
 li {
   text-wrap: pretty;
 }
 
 strong {
-  font-weight: 600;
-  color: var(--ink);
+  font-weight: 700;
+  color: var(--encre);
 }
 
 ul {
@@ -193,62 +194,61 @@ li {
   padding-left: 4px;
 }
 
-/* ::marker keeps the list a list for VoiceOver (list-style: none would not). */
 li::marker {
-  color: var(--rose);
+  color: var(--bleu);
   font-size: 1.1em;
 }
 
 a {
-  color: var(--rose-ink);
+  color: var(--bleu);
+  font-weight: 600;
   text-decoration: underline;
-  text-decoration-color: rgba(168, 74, 105, 0.35);
+  text-decoration-color: color-mix(in srgb, var(--bleu) 35%, transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
 
 a:hover,
 a:active {
-  color: var(--ink);
   text-decoration-color: currentColor;
 }
 
 a:focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--bleu);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 hr {
   height: 0;
   margin: 56px 0 0;
   border: 0;
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--separateur);
 }
 
-/* The foot: the other page and the home, in the grey, as 44 px targets. */
+/* Le pied : l'éditeur, l'hébergeur, les autres pages, en gris, cibles de 44 px. */
 footer {
-  padding-top: 8px;
+  padding-top: 12px;
   font-size: 15px;
   line-height: 20px;
-  color: var(--ink-2);
+  color: var(--gris);
 }
 
 footer a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  color: var(--ink-2);
+  color: var(--gris);
+  font-weight: 400;
   text-decoration: none;
 }
 
 footer a:hover,
 footer a:active {
-  color: var(--ink);
+  color: var(--encre);
   text-decoration: underline;
 }
 
-/* index.html's foot is a line of text, not links: give it the same height. */
 footer:not(:has(a)) {
   padding-top: 20px;
 }
@@ -259,23 +259,32 @@ footer:not(:has(a)) {
   }
 
   body {
-    padding-top: 96px;
+    padding-top: 48px;
     padding-bottom: 48px;
   }
 
-  h1 {
+  .marque {
+    margin-bottom: 56px;
+  }
+
+  h1,
+  .marque.grande span {
     font-size: 52px;
-    font-weight: 700;
     letter-spacing: -0.035em;
   }
 
-  .updated {
-    margin: 16px 0 36px;
+  .marque.grande img {
+    width: 96px;
+    height: 96px;
   }
 
-  .updated + p {
+  .updated {
+    margin: 16px 0 32px;
+  }
+
+  .carte {
     padding: 22px 26px;
-    border-radius: 24px;
+    border-radius: 28px;
   }
 
   h2 {

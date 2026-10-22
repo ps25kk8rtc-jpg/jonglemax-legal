@@ -1,8 +1,9 @@
 /* JongleMax, pages légales : le design system de l'app, « Le bleu du coach » (docs/DESIGN-SYSTEM.md), 22/10/2026.
-   Du papier craie, de l'encre, un seul bleu. La page suit le mode clair / sombre de l'iPhone, comme l'app : craie et
-   encre le jour, nuit bleutée et craie la nuit. La police est celle de l'app, SF Pro Rounded (`ui-rounded`, la police du
-   système sur iPhone et Mac : rien à télécharger) ; ailleurs, la police du système.
-   Toujours plain et rapide : aucun script, aucun cookie, une feuille de style, une image (le logo). */
+   Du papier craie, de l'encre, un seul bleu. La page suit le mode clair / sombre de l'iPhone, comme l'app, sauf si le
+   lecteur choisit lui-même (le sélecteur de l'en-tête, gardé dans localStorage : une préférence d'affichage, ni cookie
+   ni statistique). La police est celle de l'app, SF Pro Rounded (`ui-rounded`, la police du système sur iPhone et Mac :
+   rien à télécharger) ; ailleurs, la police du système.
+   Toujours plain et rapide : aucun cookie, une feuille de style, une image (le logo), deux scripts de dix lignes. */
 :root {
   color-scheme: light dark;
 
@@ -21,8 +22,9 @@
   --gutter: 20px;
 }
 
+/* La nuit de l'app : suit l'iPhone, sauf choix « Clair » du lecteur. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --craie: #0B0F17;
     --surface: #151B26;
     --encre: #EEF1F6;
@@ -33,6 +35,27 @@
     --selection: rgba(110, 155, 255, 0.28);
     --ombre-carte: none;
   }
+}
+
+/* Choix « Sombre » du lecteur, quel que soit le réglage de l'iPhone. */
+:root[data-theme="dark"] {
+  --craie: #0B0F17;
+  --surface: #151B26;
+  --encre: #EEF1F6;
+  --gris: #A3ABBA;
+  --bleu: #6E9BFF;
+  --bleu-lave: #1B2540;
+  --separateur: #222A38;
+  --selection: rgba(110, 155, 255, 0.28);
+  --ombre-carte: none;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 *,
@@ -49,7 +72,7 @@ html {
 
 body {
   margin: 0 auto;
-  padding: 24px var(--gutter) calc(32px + env(safe-area-inset-bottom));
+  padding: 20px var(--gutter) calc(32px + env(safe-area-inset-bottom));
   max-width: calc(640px + 2 * var(--gutter));
   font-family: var(--font);
   font-size: 17px;
@@ -67,13 +90,20 @@ body {
   color: var(--encre);
 }
 
-/* ---- la marque : le logo cuir et le nom, comme dans l'app (components/Marque.tsx) ------------------------------ */
+/* ---- l'en-tête : la marque (logo cuir + nom, comme components/Marque.tsx) et le choix clair / sombre ---------- */
+
+.entete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 36px;
+}
 
 .marque {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 0 0 36px;
   color: var(--encre);
   text-decoration: none;
 }
@@ -91,20 +121,39 @@ body {
   line-height: 1;
 }
 
-/* Sur la page d'accueil, la marque est le titre. */
-.marque.grande {
-  gap: 16px;
-  margin: 24px 0 8px;
+/* Le sélecteur : une capsule blanche posée sur la craie (comme les cartes de l'app), trois choix, le choisi en encre. */
+.theme {
+  display: flex;
+  flex: none;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--ombre-carte);
 }
 
-.marque.grande img {
-  width: 72px;
-  height: 72px;
+.theme button {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--gris);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.marque.grande span {
-  font-size: clamp(34px, 9.4vw, 40px);
-  letter-spacing: -0.03em;
+.theme button[aria-pressed="true"] {
+  background: var(--encre);
+  color: var(--craie);
+}
+
+.theme button:focus-visible {
+  outline: 2px solid var(--bleu);
+  outline-offset: 1px;
 }
 
 /* ---- type -------------------------------------------------------------------------------------------------- */
@@ -121,24 +170,10 @@ h1 {
 
 /* Sous le titre : l'app, la date. */
 .updated {
-  margin: 12px 0 24px;
+  margin: 12px 0 28px;
   font-size: 15px;
   line-height: 1.5;
   color: var(--gris);
-}
-
-/* Le premier paragraphe de chaque page, dans une carte blanche posée sur la craie (sans bordure, ombre douce). */
-.carte {
-  margin: 0 0 8px;
-  padding: 18px 20px;
-  border-radius: 24px;
-  background: var(--surface);
-  box-shadow: var(--ombre-carte);
-  color: var(--gris);
-}
-
-.carte strong {
-  color: var(--encre);
 }
 
 h2 {
@@ -259,32 +294,21 @@ footer:not(:has(a)) {
   }
 
   body {
-    padding-top: 48px;
+    padding-top: 40px;
     padding-bottom: 48px;
   }
 
-  .marque {
+  .entete {
     margin-bottom: 56px;
   }
 
-  h1,
-  .marque.grande span {
+  h1 {
     font-size: 52px;
     letter-spacing: -0.035em;
   }
 
-  .marque.grande img {
-    width: 96px;
-    height: 96px;
-  }
-
   .updated {
-    margin: 16px 0 32px;
-  }
-
-  .carte {
-    padding: 22px 26px;
-    border-radius: 28px;
+    margin: 16px 0 36px;
   }
 
   h2 {

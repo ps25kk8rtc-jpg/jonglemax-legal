@@ -9,17 +9,31 @@
 <title>Conditions d&#x27;utilisation · JongleMax</title>
 <link rel="icon" href="logo.png" type="image/png">
 <link rel="apple-touch-icon" href="logo.png">
-<link rel="stylesheet" href="style.css?v=20261022b">
+<link rel="stylesheet" href="style.css?v=20261022c">
+<script>
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('theme'); } catch (e) {}
+  if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+})();
+</script>
 </head>
 <body>
 
+<header class="entete">
 <a class="marque" href="index.html"><img src="logo.png" alt="" width="36" height="36"><span>JongleMax</span></a>
+<div class="theme" role="group" aria-label="Apparence">
+<button type="button" data-theme="auto" aria-pressed="true">Auto</button>
+<button type="button" data-theme="light" aria-pressed="false">Clair</button>
+<button type="button" data-theme="dark" aria-pressed="false">Sombre</button>
+</div>
+</header>
 
 <h1>Conditions d'utilisation</h1>
 
 <p class="updated">JongleMax · Dernière mise à jour&nbsp;: 21 octobre 2026</p>
 
-<p class="carte">En utilisant JongleMax, tu acceptes ces conditions. Elles sont écrites pour être lues, pas pour être sautées. Si tu as moins de 18 ans, lis-les avec un parent avant de t'abonner.</p>
+<p>En utilisant JongleMax, tu acceptes ces conditions. Elles sont écrites pour être lues, pas pour être sautées. Si tu as moins de 18 ans, lis-les avec un parent avant de t'abonner.</p>
 
 <h2>1. Qui édite JongleMax</h2>
 
@@ -151,5 +165,22 @@
 <a href="confidentialite.html">Politique de confidentialité</a> · <a href="index.html">JongleMax</a>
 </footer>
 
+<script>
+(function () {
+  var boutons = document.querySelectorAll('.theme button');
+  function montrer(t) {
+    boutons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.theme === t)); });
+  }
+  montrer(document.documentElement.dataset.theme || 'auto');
+  boutons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var t = b.dataset.theme;
+      if (t === 'auto') { delete document.documentElement.dataset.theme; } else { document.documentElement.dataset.theme = t; }
+      try { if (t === 'auto') { localStorage.removeItem('theme'); } else { localStorage.setItem('theme', t); } } catch (e) {}
+      montrer(t);
+    });
+  });
+})();
+</script>
 </body>
 </html>

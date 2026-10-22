@@ -6,18 +6,34 @@
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F6F5F1" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0B0F17" media="(prefers-color-scheme: dark)">
-<title>JongleMax</title>
+<title>Support · JongleMax</title>
 <link rel="icon" href="logo.png" type="image/png">
 <link rel="apple-touch-icon" href="logo.png">
-<link rel="stylesheet" href="style.css?v=20261022b">
+<link rel="stylesheet" href="style.css?v=20261022c">
+<script>
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('theme'); } catch (e) {}
+  if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+})();
+</script>
 </head>
 <body>
 
-<h1 class="marque grande"><img src="logo.png" alt="" width="72" height="72"><span>JongleMax</span></h1>
+<header class="entete">
+<a class="marque" href="index.html"><img src="logo.png" alt="" width="36" height="36"><span>JongleMax</span></a>
+<div class="theme" role="group" aria-label="Apparence">
+<button type="button" data-theme="auto" aria-pressed="true">Auto</button>
+<button type="button" data-theme="light" aria-pressed="false">Clair</button>
+<button type="button" data-theme="dark" aria-pressed="false">Sombre</button>
+</div>
+</header>
 
-<p class="updated">Ton coach de jongles.</p>
+<h1>Support</h1>
 
-<p class="carte">JongleMax compte tes jongles au pied, directement sur ton iPhone. Après chaque vidéo, le coach te donne un conseil précis qui devient l'objectif de ton prochain entraînement. Tes vidéos restent sur ton téléphone.</p>
+<p class="updated">JongleMax · Ton coach de jongles.</p>
+
+<p>JongleMax compte tes jongles au pied, directement sur ton iPhone. Après chaque vidéo, le coach te donne un conseil précis qui devient l'objectif de ton prochain entraînement. Tes vidéos restent sur ton téléphone.</p>
 
 <h2>Légal</h2>
 
@@ -38,5 +54,22 @@ Leyons · entreprise individuelle · SIRET 990 552 044 00010 · <a href="mailto:
 Pages hébergées par GitHub Pages&nbsp;: GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.
 </footer>
 
+<script>
+(function () {
+  var boutons = document.querySelectorAll('.theme button');
+  function montrer(t) {
+    boutons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.theme === t)); });
+  }
+  montrer(document.documentElement.dataset.theme || 'auto');
+  boutons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var t = b.dataset.theme;
+      if (t === 'auto') { delete document.documentElement.dataset.theme; } else { document.documentElement.dataset.theme = t; }
+      try { if (t === 'auto') { localStorage.removeItem('theme'); } else { localStorage.setItem('theme', t); } } catch (e) {}
+      montrer(t);
+    });
+  });
+})();
+</script>
 </body>
 </html>

@@ -9,17 +9,31 @@
 <title>Politique de confidentialité · JongleMax</title>
 <link rel="icon" href="logo.png" type="image/png">
 <link rel="apple-touch-icon" href="logo.png">
-<link rel="stylesheet" href="style.css?v=20261022b">
+<link rel="stylesheet" href="style.css?v=20261022c">
+<script>
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('theme'); } catch (e) {}
+  if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+})();
+</script>
 </head>
 <body>
 
+<header class="entete">
 <a class="marque" href="index.html"><img src="logo.png" alt="" width="36" height="36"><span>JongleMax</span></a>
+<div class="theme" role="group" aria-label="Apparence">
+<button type="button" data-theme="auto" aria-pressed="true">Auto</button>
+<button type="button" data-theme="light" aria-pressed="false">Clair</button>
+<button type="button" data-theme="dark" aria-pressed="false">Sombre</button>
+</div>
+</header>
 
 <h1>Politique de confidentialité</h1>
 
 <p class="updated">JongleMax · Dernière mise à jour&nbsp;: 20 octobre 2026</p>
 
-<p class="carte"><strong>Tes vidéos restent sur ton téléphone.</strong> JongleMax compte tes jongles directement sur ton iPhone. Tes vidéos, leurs images et les positions de ton corps calculées pendant l'analyse ne sont jamais envoyées, ni à nous ni à personne. Il n'y a pas de compte à créer. Cette page explique ce qui reste sur ton téléphone, et le peu qui en sort.</p>
+<p><strong>Tes vidéos restent sur ton téléphone.</strong> JongleMax compte tes jongles directement sur ton iPhone. Tes vidéos, leurs images et les positions de ton corps calculées pendant l'analyse ne sont jamais envoyées, ni à nous ni à personne. Il n'y a pas de compte à créer. Cette page explique ce qui reste sur ton téléphone, et le peu qui en sort.</p>
 
 <h2>En bref</h2>
 
@@ -201,5 +215,22 @@
 <a href="cgu.html">Conditions d'utilisation</a> · <a href="index.html">JongleMax</a>
 </footer>
 
+<script>
+(function () {
+  var boutons = document.querySelectorAll('.theme button');
+  function montrer(t) {
+    boutons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.theme === t)); });
+  }
+  montrer(document.documentElement.dataset.theme || 'auto');
+  boutons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var t = b.dataset.theme;
+      if (t === 'auto') { delete document.documentElement.dataset.theme; } else { document.documentElement.dataset.theme = t; }
+      try { if (t === 'auto') { localStorage.removeItem('theme'); } else { localStorage.setItem('theme', t); } } catch (e) {}
+      montrer(t);
+    });
+  });
+})();
+</script>
 </body>
 </html>
